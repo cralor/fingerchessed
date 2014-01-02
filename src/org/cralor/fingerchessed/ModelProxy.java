@@ -42,12 +42,6 @@ public class ModelProxy implements ViewListener {
 	}
 
 	@Override
-	public void done() throws IOException {
-		out.writeByte('D');
-		out.flush();
-	}
-
-	@Override
 	public void quit() throws IOException {
 		out.writeByte('Q');
 		out.flush();
@@ -56,6 +50,16 @@ public class ModelProxy implements ViewListener {
 	@Override
 	public void split() throws IOException {
 		out.writeByte('S');
+		out.flush();
+	}
+
+	@Override
+	public void newGame(String playerOne, String playerTwo, int currentPlayer)
+			throws IOException {
+		out.writeByte('N');
+		out.writeUTF(playerOne);
+		out.writeUTF(playerTwo);
+		out.writeInt(currentPlayer);
 		out.flush();
 	}
 
@@ -74,26 +78,29 @@ public class ModelProxy implements ViewListener {
 						modelListener.bothJoined(playerOne, playerTwo,
 								currPlayer);
 						break;
-					case 'B':
-						int currTurn = in.readInt();
-						modelListener.turnBegins(currTurn);
-						break;
 					case 'H':
 						int playerNum = in.readInt();
 						int leftHand = in.readInt();
 						int rightHand = in.readInt();
 						modelListener.handSet(playerNum, leftHand, rightHand);
 						break;
-					case 'D':
-						int turnDone = in.readInt();
-						int theLeftHand = in.readInt();
-						int theRightHand = in.readInt();
-						modelListener.turnDone(turnDone, theLeftHand,
-								theRightHand);
-						break;
 					case 'W':
 						int winningPlayer = in.readInt();
 						modelListener.boardDone(winningPlayer);
+						break;
+					case 'S':
+						int playerNumber = in.readInt();
+						int leftHandValue = in.readInt();
+						int rightHandValue = in.readInt();
+						modelListener.splitSet(playerNumber, leftHandValue,
+								rightHandValue);
+						break;
+					case 'N':
+						String playerOneName = in.readUTF();
+						String playerTwoName = in.readUTF();
+						int currentPlayer = in.readInt();
+						modelListener.newGame(playerOneName, playerTwoName,
+								currentPlayer);
 						break;
 					case 'Q':
 						s.close();

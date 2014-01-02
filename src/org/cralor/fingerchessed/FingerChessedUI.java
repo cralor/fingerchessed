@@ -21,15 +21,15 @@ public class FingerChessedUI extends JFrame implements ModelListener {
 	// Important class variables.
 	private ViewListener viewListener;
 	private int playerNumber = 1;
-	private boolean newGame = false;
 	private String nameOne;
 	private String nameTwo;
+	private boolean oneFinishedPlaying = true;
 
-	private int myLeftHand;
-	private int myRightHand;
-	private int oppLeftHand;
-	private int oppRightHand;
-	private int myChoice;
+	private int playerOneLeftValue = 1;
+	private int playerOneRightValue = 1;
+	private int playerTwoLeftValue = 1;
+	private int playerTwoRightValue = 1;
+	private int myChoice = 1;
 
 	static {
 		try {
@@ -45,7 +45,7 @@ public class FingerChessedUI extends JFrame implements ModelListener {
 		return dst;
 	}
 
-	// Icons for tiles. tileIcon[0] is a blank tile.
+	// Icons for tiles. handIcon[0] is a blank tile.
 	private static final ImageIcon[] handIcon = new ImageIcon[] {
 			new ImageIcon(intArray2ByteArray(new int[] { 137, 80, 78, 71, 13,
 					10, 26, 10, 0, 0, 0, 13, 73, 72, 68, 82, 0, 0, 0, 53, 0, 0,
@@ -342,13 +342,13 @@ public class FingerChessedUI extends JFrame implements ModelListener {
 					174, 66, 96, 130, })), };
 
 	// Widgets.
-	private JLabel playerOne;
-	private JLabel playerTwo;
-	private JButton leftHandButton;
-	private JButton rightHandButton;
-	private JButton leftOppButton;
-	private JButton rightOppButton;
-	private JButton doneButton;
+	private JLabel playerOneTitle;
+	private JLabel playerTwoTitle;
+	private JButton playerOneLeftHand;
+	private JButton playerOneRightHand;
+	private JButton playerTwoLeftHand;
+	private JButton playerTwoRightHand;
+	private JButton newGameButton;
 	private JButton splitButton;
 	private JTextField messageArea;
 
@@ -361,88 +361,137 @@ public class FingerChessedUI extends JFrame implements ModelListener {
 		setLayout(lm);
 
 		// Set up the player titles.
-		playerOne = new JLabel("PLAYER 1");
+		playerOneTitle = new JLabel("PLAYER 1");
 		c.gridx = 1;
 		c.gridy = 1;
 		c.gridwidth = 2;
-		lm.setConstraints(playerOne, c);
+		lm.setConstraints(playerOneTitle, c);
 
-		add(playerOne);
+		add(playerOneTitle);
 
-		playerTwo = new JLabel("PLAYER 2");
+		playerTwoTitle = new JLabel("PLAYER 2");
 		c.gridx = 1;
 		c.gridy = 4;
 		c.gridwidth = 2;
-		lm.setConstraints(playerTwo, c);
+		lm.setConstraints(playerTwoTitle, c);
 
-		add(playerTwo);
+		add(playerTwoTitle);
 
 		// Set up the two hands for player and opponent.
-		leftHandButton = new JButton(handIcon[1]);
+		playerOneLeftHand = new JButton(handIcon[1]);
 		c.gridx = 1;
 		c.gridy = 2;
 		c.gridwidth = 1;
-		lm.setConstraints(leftHandButton, c);
+		lm.setConstraints(playerOneLeftHand, c);
 
-		rightHandButton = new JButton(handIcon[1]);
+		playerOneRightHand = new JButton(handIcon[1]);
 		c.gridx = 2;
 		c.gridy = 2;
-		lm.setConstraints(rightHandButton, c);
+		lm.setConstraints(playerOneRightHand, c);
 
-		leftOppButton = new JButton(handIcon[1]);
+		playerTwoLeftHand = new JButton(handIcon[1]);
 		c.gridx = 1;
 		c.gridy = 5;
-		lm.setConstraints(leftOppButton, c);
+		lm.setConstraints(playerTwoLeftHand, c);
 
-		rightOppButton = new JButton(handIcon[1]);
+		playerTwoRightHand = new JButton(handIcon[1]);
 		c.gridx = 2;
 		c.gridy = 5;
-		lm.setConstraints(rightOppButton, c);
+		lm.setConstraints(playerTwoRightHand, c);
 
 		// Collect the number of fingers we have on the left hand.
-		leftHandButton.addActionListener(new ActionListener() {
+		playerOneLeftHand.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				myChoice = myLeftHand;
+				if (playerNumber == 1) {
+					myChoice = playerOneLeftValue;
+					// int currPlayer = (playerNumber == 1 ? 2 : 1);
+					enablePlayerOne(false);
+					enablePlayerTwo(true);
+				} else {
+					int newValue = myChoice + playerOneLeftValue;
+					newValue = (newValue >= 5 ? 0 : newValue);
+					int oppNum = (playerNumber == 1 ? 2 : 1);
+					try {
+						viewListener.setHand(oppNum, newValue,
+								playerOneRightValue);
+					} catch (IOException e1) {
+					}
+					enablePlayerTwo(false);
+				}
 			}
 		});
 
 		// Collect the number of fingers we have on the right hand.
-		rightHandButton.addActionListener(new ActionListener() {
+		playerOneRightHand.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				myChoice = myRightHand;
+				if (playerNumber == 1) {
+					myChoice = playerOneRightValue;
+					enablePlayerOne(false);
+					enablePlayerTwo(true);
+				} else {
+					int newValue = myChoice + playerOneRightValue;
+					newValue = (newValue >= 5 ? 0 : newValue);
+					int oppNum = (playerNumber == 1 ? 2 : 1);
+					try {
+						viewListener.setHand(oppNum, playerOneLeftValue,
+								newValue);
+					} catch (IOException e1) {
+					}
+					enablePlayerTwo(false);
+				}
 			}
 		});
 
 		// Apply the left or right hand choice to the opponent's left hand.
-		leftOppButton.addActionListener(new ActionListener() {
+		playerTwoLeftHand.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				try {
-					int newValue = myChoice + oppLeftHand;
-					viewListener.setHand(playerNumber, newValue, oppRightHand);
-				} catch (IOException e1) {
+				if (playerNumber == 2) {
+					myChoice = playerTwoLeftValue;
+					enablePlayerOne(true);
+					enablePlayerTwo(false);
+				} else {
+					int newValue = myChoice + playerTwoLeftValue;
+					newValue = (newValue >= 5 ? 0 : newValue);
+					int oppNum = (playerNumber == 1 ? 2 : 1);
+					try {
+						viewListener.setHand(oppNum, newValue,
+								playerTwoRightValue);
+					} catch (IOException e1) {
+					}
+					enablePlayerOne(false);
 				}
 			}
 		});
 
 		// Apply the left or right hand choice to the opponent's right hand.
-		rightOppButton.addActionListener(new ActionListener() {
+		playerTwoRightHand.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				try {
-					int newValue = myChoice + oppRightHand;
-					viewListener.setHand(playerNumber, oppLeftHand, newValue);
-				} catch (IOException e1) {
+				if (playerNumber == 2) {
+					myChoice = playerTwoRightValue;
+					enablePlayerOne(true);
+					enablePlayerTwo(false);
+				} else {
+					int newValue = myChoice + playerTwoRightValue;
+					newValue = (newValue >= 5 ? 0 : newValue);
+					int oppNum = (playerNumber == 1 ? 2 : 1);
+					try {
+						viewListener.setHand(oppNum, playerTwoLeftValue,
+								newValue);
+					} catch (IOException e1) {
+					}
+					enablePlayerOne(false);
 				}
 			}
 		});
 
-		add(leftHandButton);
-		add(rightHandButton);
-		add(leftOppButton);
-		add(rightOppButton);
+		add(playerOneLeftHand);
+		add(playerOneRightHand);
+		add(playerTwoLeftHand);
+		add(playerTwoRightHand);
 
 		// Set up the split button.
 		splitButton = new JButton("Split");
@@ -455,6 +504,7 @@ public class FingerChessedUI extends JFrame implements ModelListener {
 			public void actionPerformed(ActionEvent e) {
 				try {
 					viewListener.split();
+					splitButton.setEnabled(false);
 				} catch (IOException e1) {
 				}
 			}
@@ -462,23 +512,24 @@ public class FingerChessedUI extends JFrame implements ModelListener {
 
 		add(splitButton);
 
-		// Set up the done button.
-		doneButton = new JButton("Done");
+		// Set up the new game button.
+
+		newGameButton = new JButton("New Game");
 		c.gridx = 3;
 		c.gridy = 3;
-		lm.setConstraints(doneButton, c);
+		lm.setConstraints(newGameButton, c);
 
-		doneButton.addActionListener(new ActionListener() {
+		newGameButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				try {
-					viewListener.done();
+					viewListener.newGame(nameOne, nameTwo, 1);
 				} catch (IOException e1) {
 				}
 			}
 		});
 
-		add(doneButton);
+		add(newGameButton);
 
 		// Set up the message area.
 		messageArea = new JTextField();
@@ -506,50 +557,94 @@ public class FingerChessedUI extends JFrame implements ModelListener {
 		setSize(getPreferredSize());
 		messageArea.setText("Waiting for opponent");
 		setVisible(true);
-		enableButtons(false);
+		enablePlayerOne(false);
+		enablePlayerTwo(false);
+		splitButton.setEnabled(false);
+		newGameButton.setEnabled(false);
 	}
 
 	public void setViewListener(ViewListener viewListener) {
 		this.viewListener = viewListener;
 	}
 
-	public void enableButtons(boolean enabled) {
-		leftHandButton.setEnabled(enabled);
-		rightHandButton.setEnabled(enabled);
-		leftOppButton.setEnabled(enabled);
-		rightOppButton.setEnabled(enabled);
-		doneButton.setEnabled(enabled);
-		splitButton.setEnabled(enabled);
+	public void enablePlayerOne(boolean enabled) {
+		if (playerOneLeftValue != 0) {
+			playerOneLeftHand.setEnabled(enabled);
+		} else {
+			playerOneLeftHand.setEnabled(false);
+		}
+
+		if (playerOneRightValue != 0) {
+			playerOneRightHand.setEnabled(enabled);
+		} else {
+			playerOneRightHand.setEnabled(false);
+		}
+	}
+
+	public void enablePlayerTwo(boolean enabled) {
+		if (playerTwoLeftValue != 0) {
+			playerTwoLeftHand.setEnabled(enabled);
+		} else {
+			playerTwoLeftHand.setEnabled(false);
+		}
+
+		if (playerTwoRightValue != 0) {
+			playerTwoRightHand.setEnabled(enabled);
+		} else {
+			playerTwoRightHand.setEnabled(false);
+		}
+	}
+
+	@Override
+	public void splitSet(int playerNum, int leftHand, int rightHand)
+			throws IOException {
+		int currentNum = (playerNum == 1 ? 1 : 2);
+
+		if (playerNum == 1) {
+			playerOneLeftHand.setIcon(handIcon[leftHand]);
+			playerOneLeftValue = leftHand;
+			playerOneRightHand.setIcon(handIcon[rightHand]);
+			playerOneRightValue = rightHand;
+		} else {
+			playerTwoLeftHand.setIcon(handIcon[leftHand]);
+			playerTwoLeftValue = leftHand;
+			playerTwoRightHand.setIcon(handIcon[rightHand]);
+			playerTwoRightValue = rightHand;
+		}
+
+		if (oneFinishedPlaying) {
+			if (currentNum == playerNumber) {
+				enablePlayerOne(true);
+			}
+		} else {
+			if (currentNum == playerNumber) {
+				enablePlayerTwo(true);
+			}
+		}
 	}
 
 	@Override
 	public void handSet(int playerNum, int leftHand, int rightHand)
 			throws IOException {
-		int currentNum = (playerNum == 1 ? 1 : 2);
-		if (currentNum == playerNumber) {
-			leftHandButton.setIcon(handIcon[leftHand]);
-			myLeftHand = leftHand;
-			rightHandButton.setIcon(handIcon[rightHand]);
-			myRightHand = rightHand;
+		if (playerNum == 1) {
+			playerOneLeftHand.setIcon(handIcon[leftHand]);
+			playerOneLeftValue = leftHand;
+			playerOneRightHand.setIcon(handIcon[rightHand]);
+			playerOneRightValue = rightHand;
 		} else {
-			leftOppButton.setIcon(handIcon[leftHand]);
-			oppLeftHand = leftHand;
-			rightOppButton.setIcon(handIcon[rightHand]);
-			oppRightHand = rightHand;
+			playerTwoLeftHand.setIcon(handIcon[leftHand]);
+			playerTwoLeftValue = leftHand;
+			playerTwoRightHand.setIcon(handIcon[rightHand]);
+			playerTwoRightValue = rightHand;
 		}
 
-		if (newGame) {
-			setMessage(nameOne + " -- " + nameTwo);
-			newGame = false;
-		}
+		splitButton.setEnabled(false);
+
+		turnDone(playerNum, leftHand, rightHand);
 	}
 
 	public void setMessage(String msg) {
 		messageArea.setText(msg);
-	}
-
-	public String getMessage() {
-		return messageArea.getText();
 	}
 
 	@Override
@@ -557,36 +652,78 @@ public class FingerChessedUI extends JFrame implements ModelListener {
 			throws IOException {
 		this.nameOne = playerOne;
 		this.nameTwo = playerTwo;
-		this.playerOne.setText(playerOne);
-		this.playerTwo.setText(playerTwo);
-		setMessage(playerOne + " -- " + playerTwo);
+		this.playerOneTitle.setText(playerOne);
+		this.playerTwoTitle.setText(playerTwo);
+		setMessage("Let the games begin!");
 		this.playerNumber = currPlayer;
-		enableButtons(false);
+
+		if (currPlayer == 1)
+			enablePlayerOne(currPlayer == playerNumber ? true : false);
 	}
 
-	@Override
-	public void turnBegins(int currPlayer) throws IOException {
-		enableButtons(currPlayer == playerNumber ? true : false);
+	public boolean splitCheck(int leftHand, int rightHand) {
+		if (leftHand == 4 || leftHand == 2) {
+			if (rightHand == 0)
+				return true;
+		} else if (rightHand == 4 || rightHand == 2) {
+			if (leftHand == 0)
+				return true;
+		}
+		return false;
 	}
 
-	@Override
 	public void turnDone(int currPlayer, int leftHand, int rightHand)
 			throws IOException {
 		int currentNum = (currPlayer == 1 ? 1 : 2);
-		if (currentNum == playerNumber) { // This client is the current player.
-			enableButtons(false);
-		} else {
-			enableButtons(true);
+
+		if (oneFinishedPlaying) { // Player two's turn.
+			// Check if game is over.
+			if (playerTwoLeftValue == 0 && playerTwoRightValue == 0) {
+				boardDone(1);
+				return;
+			}
+
+			// Otherwise, continue as normal... player two's turn.
+			oneFinishedPlaying = !oneFinishedPlaying;
+			enablePlayerOne(false);
+			enablePlayerTwo(false);
+			if (currentNum == playerNumber)
+				enablePlayerTwo(true);
+
+			// Enable the split button if split is possible.
+			if (splitCheck(playerTwoLeftValue, playerTwoRightValue)) {
+				if (currentNum == playerNumber)
+					splitButton.setEnabled(true);
+			}
+
+		} else { // Player one's turn.
+			// Check if game is over.
+			if (playerOneLeftValue == 0 && playerOneRightValue == 0) {
+				boardDone(2);
+				return;
+			}
+
+			oneFinishedPlaying = !oneFinishedPlaying;
+			enablePlayerTwo(false);
+			enablePlayerOne(false);
+			if (currentNum == playerNumber)
+				enablePlayerOne(true);
+
+			// Enable the split button if split is possible.
+			if (splitCheck(playerOneLeftValue, playerOneRightValue)) {
+				if (currentNum == playerNumber)
+					splitButton.setEnabled(true);
+			}
 		}
 
-		if (currentNum == 1) {
-			// this.playerOneScore = score;
-			// setMessage(nameOne + " " + score + " -- " + nameTwo);
-			setMessage(nameTwo + "'s turn!");
+		if (currentNum == playerNumber) {
+			setMessage("YOUR TURN!");
 		} else {
-			// setMessage(nameOne + " " + playerOneScore + " -- " + nameTwo +
-			// " " + score);
-			setMessage(nameOne + "'s turn!");
+			if (currPlayer == 1) {
+				setMessage(nameOne + "'s turn!");
+			} else {
+				setMessage(nameTwo + "'s turn!");
+			}
 		}
 	}
 
@@ -597,15 +734,31 @@ public class FingerChessedUI extends JFrame implements ModelListener {
 			theWinner = nameOne + " wins!";
 		} else if (winner == 2) {
 			theWinner = nameTwo + " wins!";
-		} else if (winner == 0) {
-			theWinner = "Tie!";
 		}
-		setMessage(getMessage() + " -- " + theWinner);
-		this.newGame = true;
+
+		enablePlayerOne(false);
+		enablePlayerTwo(false);
+
+		newGameButton.setEnabled(true);
+
+		setMessage(theWinner);
 	}
 
 	@Override
 	public void quit() throws IOException {
 		// We do nothing here.
+	}
+
+	@Override
+	public void newGame(String playerOne, String playerTwo, int currentPlayer)
+			throws IOException {
+		playerOneLeftHand.setIcon(handIcon[1]);
+		playerOneRightHand.setIcon(handIcon[1]);
+		playerTwoLeftHand.setIcon(handIcon[1]);
+		playerTwoRightHand.setIcon(handIcon[1]);
+
+		newGameButton.setEnabled(false);
+
+		bothJoined(playerOne, playerTwo, currentPlayer);
 	}
 }

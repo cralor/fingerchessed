@@ -11,7 +11,8 @@ public interface ViewListener {
 
 	public void split() throws IOException;
 
-	public void done() throws IOException;
+	public void newGame(String playerOne, String playerTwo, int currentPlayer)
+			throws IOException;
 
 	public void quit() throws IOException;
 

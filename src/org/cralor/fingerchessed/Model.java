@@ -30,29 +30,12 @@ public class Model implements ViewListener {
 	@Override
 	public synchronized void setHand(int playerNum, int leftHand, int rightHand)
 			throws IOException {
-		Iterator<ModelListener> iter = listeners.iterator();
-		while (iter.hasNext()) {
-			ModelListener listener = iter.next();
-			try {
-				listener.handSet(playerNum, leftHand, rightHand);
-			} catch (IOException e) {
-				iter.remove();
-			}
-		}
-	}
-
-	@Override
-	public synchronized void done() throws IOException {
 		int currentPlayer = board.getCurrentTurn();
-		int leftHand = 0;
-		int rightHand = 0;
 
-		if (currentPlayer == 1) {
-			leftHand = board.getOneHand()[0];
-			rightHand = board.getOneHand()[1];
+		if (playerNum == 1) {
+			board.setOneHand(leftHand, rightHand);
 		} else {
-			leftHand = board.getTwoHand()[0];
-			rightHand = board.getTwoHand()[1];
+			board.setTwoHand(leftHand, rightHand);
 		}
 
 		board.switchTurns(currentPlayer == 1 ? 2 : 1);
@@ -61,15 +44,7 @@ public class Model implements ViewListener {
 		while (iter.hasNext()) {
 			ModelListener listener = iter.next();
 			try {
-				if (currentPlayer == 1) {
-					listener.turnDone(currentPlayer, leftHand, rightHand);
-					// board.setOneScore(playerScore);
-					listener.turnBegins(2);
-				} else {
-					listener.turnDone(currentPlayer, leftHand, rightHand);
-					// board.setTwoScore(playerScore);
-					listener.boardDone(board.getWinner());
-				}
+				listener.handSet(playerNum, leftHand, rightHand);
 			} catch (IOException e) {
 				iter.remove();
 			}
@@ -96,7 +71,6 @@ public class Model implements ViewListener {
 			ModelListener listener = iter.next();
 			try {
 				listener.bothJoined(playerOne, playerTwo, currPlayer++);
-				listener.turnBegins(1);
 			} catch (IOException e) {
 				iter.remove();
 			}
@@ -124,7 +98,24 @@ public class Model implements ViewListener {
 		while (iter.hasNext()) {
 			ModelListener listener = iter.next();
 			try {
-				listener.handSet(currentPlayer, amountToSplit, amountToSplit);
+				listener.splitSet(currentPlayer, amountToSplit, amountToSplit);
+			} catch (IOException e) {
+				iter.remove();
+			}
+		}
+	}
+
+	@Override
+	public void newGame(String playerOne, String playerTwo, int currentPlayer)
+			throws IOException {
+		board.setOneHand(1, 1);
+		board.setTwoHand(1, 1);
+
+		Iterator<ModelListener> iter = listeners.iterator();
+		while (iter.hasNext()) {
+			ModelListener listener = iter.next();
+			try {
+				listener.newGame(playerOne, playerTwo, currentPlayer++);
 			} catch (IOException e) {
 				iter.remove();
 			}

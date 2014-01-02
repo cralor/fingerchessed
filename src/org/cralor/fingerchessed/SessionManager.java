@@ -48,17 +48,18 @@ public class SessionManager implements ViewListener {
 	}
 
 	@Override
-	public void done() throws IOException {
-		// We do nothing here.
-	}
-
-	@Override
 	public void quit() throws IOException {
 		// We do nothing here.
 	}
 
 	@Override
 	public void split() throws IOException {
+		// We do nothing here.
+	}
+
+	@Override
+	public void newGame(String playerOne, String playerTwo, int currentPlayer)
+			throws IOException {
 		// We do nothing here.
 	}
 

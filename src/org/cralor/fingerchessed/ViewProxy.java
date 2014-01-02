@@ -49,23 +49,6 @@ public class ViewProxy implements ModelListener {
 	}
 
 	@Override
-	public void turnBegins(int currPlayer) throws IOException {
-		out.writeByte('B');
-		out.writeInt(currPlayer);
-		out.flush();
-	}
-
-	@Override
-	public void turnDone(int currPlayer, int leftHand, int rightHand)
-			throws IOException {
-		out.writeByte('D');
-		out.writeInt(currPlayer);
-		out.writeInt(leftHand);
-		out.writeInt(rightHand);
-		out.flush();
-	}
-
-	@Override
 	public void boardDone(int winner) throws IOException {
 		out.writeByte('W');
 		out.writeInt(winner);
@@ -75,6 +58,26 @@ public class ViewProxy implements ModelListener {
 	@Override
 	public void quit() throws IOException {
 		out.writeByte('Q');
+		out.flush();
+	}
+
+	@Override
+	public void splitSet(int playerNum, int leftHand, int rightHand)
+			throws IOException {
+		out.writeByte('S');
+		out.writeInt(playerNum);
+		out.writeInt(leftHand);
+		out.writeInt(rightHand);
+		out.flush();
+	}
+
+	@Override
+	public void newGame(String playerOne, String playerTwo, int currentPlayer)
+			throws IOException {
+		out.writeByte('N');
+		out.writeUTF(playerOne);
+		out.writeUTF(playerTwo);
+		out.writeInt(currentPlayer);
 		out.flush();
 	}
 
@@ -95,8 +98,12 @@ public class ViewProxy implements ModelListener {
 						int rightHand = in.readInt();
 						viewListener.setHand(playerNum, leftHand, rightHand);
 						break;
-					case 'D':
-						viewListener.done();
+					case 'N':
+						String playerOne = in.readUTF();
+						String playerTwo = in.readUTF();
+						int currentPlayer = in.readInt();
+						viewListener.newGame(playerOne, playerTwo,
+								currentPlayer);
 						break;
 					case 'S':
 						viewListener.split();
