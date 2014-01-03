@@ -111,6 +111,8 @@ public class Model implements ViewListener {
 		board.setOneHand(1, 1);
 		board.setTwoHand(1, 1);
 
+		board.switchTurns(1);
+
 		Iterator<ModelListener> iter = listeners.iterator();
 		while (iter.hasNext()) {
 			ModelListener listener = iter.next();

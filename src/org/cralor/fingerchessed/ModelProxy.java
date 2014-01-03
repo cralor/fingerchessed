@@ -112,12 +112,10 @@ public class ModelProxy implements ViewListener {
 					}
 				}
 			} catch (IOException e) {
-				e.printStackTrace();
 			} finally {
 				try {
 					s.close();
 				} catch (IOException e) {
-					e.printStackTrace();
 				}
 			}
 		}

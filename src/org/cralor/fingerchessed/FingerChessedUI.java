@@ -762,6 +762,8 @@ public class FingerChessedUI extends JFrame implements ModelListener {
 		playerTwoLeftValue = 1;
 		playerTwoRightValue = 1;
 
+		oneFinishedPlaying = true;
+
 		newGameButton.setEnabled(false);
 
 		bothJoined(playerOne, playerTwo, currentPlayer);
