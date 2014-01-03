@@ -7,7 +7,7 @@ import java.util.LinkedList;
 public class Model implements ViewListener {
 
 	// Important class variables.
-	private Board board = new Board();
+	private Game engine = new Game();
 	private LinkedList<ModelListener> listeners = new LinkedList<ModelListener>();
 
 	public Model() {
@@ -17,8 +17,8 @@ public class Model implements ViewListener {
 		listeners.add(modelListener);
 	}
 
-	public Board getBoard() {
-		return this.board;
+	public Game getGame() {
+		return this.engine;
 	}
 
 	@Override
@@ -30,15 +30,15 @@ public class Model implements ViewListener {
 	@Override
 	public synchronized void setHand(int playerNum, int leftHand, int rightHand)
 			throws IOException {
-		int currentPlayer = board.getCurrentTurn();
+		int currentPlayer = engine.getCurrentTurn();
 
 		if (playerNum == 1) {
-			board.setOneHand(leftHand, rightHand);
+			engine.setOneHand(leftHand, rightHand);
 		} else {
-			board.setTwoHand(leftHand, rightHand);
+			engine.setTwoHand(leftHand, rightHand);
 		}
 
-		board.switchTurns(currentPlayer == 1 ? 2 : 1);
+		engine.switchTurns(currentPlayer == 1 ? 2 : 1);
 
 		Iterator<ModelListener> iter = listeners.iterator();
 		while (iter.hasNext()) {
@@ -79,19 +79,19 @@ public class Model implements ViewListener {
 
 	@Override
 	public void split() throws IOException {
-		int currentPlayer = board.getCurrentTurn();
+		int currentPlayer = engine.getCurrentTurn();
 		int amountToSplit = 0;
 
 		if (currentPlayer == 1) {
-			amountToSplit = Math.max(board.getOneHand()[0],
-					board.getOneHand()[1]);
+			amountToSplit = Math.max(engine.getOneHand()[0],
+					engine.getOneHand()[1]);
 			amountToSplit = amountToSplit / 2;
-			board.setOneHand(amountToSplit, amountToSplit);
+			engine.setOneHand(amountToSplit, amountToSplit);
 		} else {
-			amountToSplit = Math.max(board.getTwoHand()[0],
-					board.getTwoHand()[1]);
+			amountToSplit = Math.max(engine.getTwoHand()[0],
+					engine.getTwoHand()[1]);
 			amountToSplit = amountToSplit / 2;
-			board.setTwoHand(amountToSplit, amountToSplit);
+			engine.setTwoHand(amountToSplit, amountToSplit);
 		}
 
 		Iterator<ModelListener> iter = listeners.iterator();
@@ -108,10 +108,10 @@ public class Model implements ViewListener {
 	@Override
 	public void newGame(String playerOne, String playerTwo, int currentPlayer)
 			throws IOException {
-		board.setOneHand(1, 1);
-		board.setTwoHand(1, 1);
+		engine.setOneHand(1, 1);
+		engine.setTwoHand(1, 1);
 
-		board.switchTurns(1);
+		engine.switchTurns(1);
 
 		Iterator<ModelListener> iter = listeners.iterator();
 		while (iter.hasNext()) {

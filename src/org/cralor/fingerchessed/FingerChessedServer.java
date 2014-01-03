@@ -7,6 +7,7 @@ import java.net.Socket;
 
 public class FingerChessedServer {
 
+	@SuppressWarnings("resource")
 	public static void main(String[] args) throws IOException {
 
 		usage(args);

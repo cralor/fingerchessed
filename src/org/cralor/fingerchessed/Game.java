@@ -1,6 +1,6 @@
 package org.cralor.fingerchessed;
 
-public class Board {
+public class Game {
 
 	// Important class variables.
 	private String playerOne = "";
@@ -10,10 +10,11 @@ public class Board {
 	private int oneRightHand = 1;
 	private int twoLeftHand = 1;
 	private int twoRightHand = 1;
-	private int oneWins;
-	private int twoWins;
 
-	public Board() {
+	// private int oneWins;
+	// private int twoWins;
+
+	public Game() {
 	}
 
 	public synchronized void switchTurns(int currentTurn) {

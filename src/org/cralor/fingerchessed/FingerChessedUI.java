@@ -354,6 +354,7 @@ public class FingerChessedUI extends JFrame implements ModelListener {
 
 	public FingerChessedUI() {
 		super("FingerChessed");
+		setLocationRelativeTo(null);
 
 		// Set up the layout manager.
 		GridBagLayout lm = new GridBagLayout();

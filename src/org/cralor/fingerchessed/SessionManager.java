@@ -16,7 +16,7 @@ public class SessionManager implements ViewListener {
 		// No sessions available.
 		if (sessions.size() == 0) {
 			Model m = new Model();
-			m.getBoard().setOneName(playerName);
+			m.getGame().setOneName(playerName);
 			sessions.add(m);
 			m.addModelListener(p);
 			p.setViewListener(m);
@@ -24,17 +24,17 @@ public class SessionManager implements ViewListener {
 			Model m = sessions.get(sessions.size() - 1);
 
 			// Session found is full, make new one.
-			if (!m.getBoard().getPlayerTwo().equals("")) {
+			if (!m.getGame().getPlayerTwo().equals("")) {
 				m = new Model();
-				m.getBoard().setOneName(playerName);
+				m.getGame().setOneName(playerName);
 				sessions.add(m);
 				m.addModelListener(p);
 				p.setViewListener(m);
 			} else {
 				// Session found only has one player, fill second.
-				m.getBoard().setTwoName(playerName);
+				m.getGame().setTwoName(playerName);
 				m.addModelListener(p);
-				m.bothJoined(m.getBoard().getPlayerOne(), m.getBoard()
+				m.bothJoined(m.getGame().getPlayerOne(), m.getGame()
 						.getPlayerTwo(), 1);
 				p.setViewListener(m);
 			}
