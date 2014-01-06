@@ -1,4 +1,9 @@
-fingerchessed
+FingerChessed GitHub Project Site
 =============
 
-Java implementation of popular Finger Chess hand game
+[Small project site](http://cralor.github.io/fingerchessed/) for the [FingerChessed Java game](https://github.com/cralor/fingerchessed).
+
+Content includes:
+- Overview
+- How to Play
+- Changelog
