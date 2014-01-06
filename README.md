@@ -1,3 +1,8 @@
+FingerChessed
+=============
+
+Java implementation of popular Finger Chess hand game
+
 <h3>Overview</h3>
 Based on the popular hand game Finger Chess, FingerChessed is a server-client networked Java implementation using byte encoding over TCP. Finger Chess is a very simple hand game using the fingers on both of your hands. Starting with one finger and adding to your opponent's hands, the first player to reach 5 fingers on both hands loses.
 
