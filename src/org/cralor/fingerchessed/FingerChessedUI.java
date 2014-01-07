@@ -33,7 +33,8 @@ public class FingerChessedUI extends JFrame implements ModelListener {
 
 	static {
 		try {
-			UIManager.setLookAndFeel("javax.swing.plaf.metal.MetalLookAndFeel");
+			UIManager
+					.setLookAndFeel("com.sun.java.swing.plaf.nimbus.NimbusLookAndFeel");
 		} catch (Exception e) {
 		}
 	}
@@ -354,12 +355,11 @@ public class FingerChessedUI extends JFrame implements ModelListener {
 
 	public FingerChessedUI() {
 		super("FingerChessed");
-		setLocationRelativeTo(null);
 
 		// Set up the layout manager.
 		GridBagLayout lm = new GridBagLayout();
 		GridBagConstraints c = new GridBagConstraints();
-		setLayout(lm);
+		getContentPane().setLayout(lm);
 
 		// Set up the player titles.
 		playerOneTitle = new JLabel("PLAYER 1");
@@ -368,7 +368,7 @@ public class FingerChessedUI extends JFrame implements ModelListener {
 		c.gridwidth = 2;
 		lm.setConstraints(playerOneTitle, c);
 
-		add(playerOneTitle);
+		getContentPane().add(playerOneTitle);
 
 		playerTwoTitle = new JLabel("PLAYER 2");
 		c.gridx = 1;
@@ -376,7 +376,7 @@ public class FingerChessedUI extends JFrame implements ModelListener {
 		c.gridwidth = 2;
 		lm.setConstraints(playerTwoTitle, c);
 
-		add(playerTwoTitle);
+		getContentPane().add(playerTwoTitle);
 
 		// Set up the two hands for player and opponent.
 		playerOneLeftHand = new JButton(handIcon[1]);
@@ -489,10 +489,10 @@ public class FingerChessedUI extends JFrame implements ModelListener {
 			}
 		});
 
-		add(playerOneLeftHand);
-		add(playerOneRightHand);
-		add(playerTwoLeftHand);
-		add(playerTwoRightHand);
+		getContentPane().add(playerOneLeftHand);
+		getContentPane().add(playerOneRightHand);
+		getContentPane().add(playerTwoLeftHand);
+		getContentPane().add(playerTwoRightHand);
 
 		// Set up the split button.
 		splitButton = new JButton("Split");
@@ -511,7 +511,7 @@ public class FingerChessedUI extends JFrame implements ModelListener {
 			}
 		});
 
-		add(splitButton);
+		getContentPane().add(splitButton);
 
 		// Set up the new game button.
 
@@ -530,7 +530,7 @@ public class FingerChessedUI extends JFrame implements ModelListener {
 			}
 		});
 
-		add(newGameButton);
+		getContentPane().add(newGameButton);
 
 		// Set up the message area.
 		messageArea = new JTextField();
@@ -539,7 +539,7 @@ public class FingerChessedUI extends JFrame implements ModelListener {
 		c.gridwidth = 2;
 		c.fill = GridBagConstraints.HORIZONTAL;
 		lm.setConstraints(messageArea, c);
-		add(messageArea);
+		getContentPane().add(messageArea);
 		messageArea.setEditable(false);
 
 		// Set up the close window button.
@@ -556,6 +556,7 @@ public class FingerChessedUI extends JFrame implements ModelListener {
 		// Display all the things.
 		pack();
 		setSize(getPreferredSize());
+		setLocationRelativeTo(null);
 		messageArea.setText("Waiting for opponent");
 		setVisible(true);
 		enablePlayerOne(false);

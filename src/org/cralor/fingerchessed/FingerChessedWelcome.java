@@ -30,7 +30,8 @@ public class FingerChessedWelcome extends JFrame {
 
 	static {
 		try {
-			UIManager.setLookAndFeel("javax.swing.plaf.metal.MetalLookAndFeel");
+			UIManager
+					.setLookAndFeel("com.sun.java.swing.plaf.nimbus.NimbusLookAndFeel");
 		} catch (Exception e) {
 		}
 	}
@@ -49,8 +50,6 @@ public class FingerChessedWelcome extends JFrame {
 
 	public FingerChessedWelcome() {
 		super("Connect to a Server");
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setLocationRelativeTo(null);
 
 		// Set up the layout manager.
 		GridBagLayout lm = new GridBagLayout();
@@ -195,6 +194,8 @@ public class FingerChessedWelcome extends JFrame {
 
 		// Display all the things.
 		pack();
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setLocationRelativeTo(null);
 		setSize(500, 450);
 		setVisible(true);
 	}
@@ -205,33 +206,46 @@ public class FingerChessedWelcome extends JFrame {
 		// Validate and filter the host data.
 		String host = serverField.getText();
 
-		try {
-			InetAddress ia = InetAddress.getByName(host);
-			host = ia.getHostAddress();
-			int thePort = Integer.parseInt(portField.getText());
-			Socket s = new Socket(ia, thePort);
-			s = null;
-		} catch (UnknownHostException e2) {
-			errorLabel.setText("INVALID HOST");
-		} catch (IOException e) {
-			errorLabel.setText("SERVER NOT FOUND");
+		if (host.equals("")) {
+			errorLabel.setText("PLEASE SPECIFY HOST");
+		} else {
+			try {
+				InetAddress ia = InetAddress.getByName(host);
+				host = ia.getHostAddress();
+				int thePort = Integer.parseInt(portField.getText());
+				Socket s = new Socket(ia, thePort);
+				s = null;
+			} catch (UnknownHostException e2) {
+				errorLabel.setText("INVALID HOST");
+			} catch (IOException e) {
+				errorLabel.setText("SERVER NOT FOUND");
+			}
 		}
 
 		// Validate and filter the port data.
 		String port = portField.getText();
-		try {
-			int portNum = Integer.parseInt(port);
-			port = String.valueOf(portNum);
-		} catch (NumberFormatException e) {
-			errorLabel.setText("INVALID PORT");
+
+		if (port.equals("")) {
+			errorLabel.setText("PLEASE SPECIFY PORT");
+		} else {
+			try {
+				int portNum = Integer.parseInt(port);
+				port = String.valueOf(portNum);
+			} catch (NumberFormatException e) {
+				errorLabel.setText("INVALID PORT");
+			}
 		}
 
 		// Validate and filter the player name data.
 		String playerName = nameField.getText();
-		boolean validName = Pattern.compile("^[A-Za-z0-9]+$")
-				.matcher(playerName).matches();
-		if (!validName) {
-			errorLabel.setText("INVALID NAME");
+
+		if (playerName.equals("")) {
+			errorLabel.setText("PLEASE SPECIFY A NAME");
+		} else {
+			boolean validName = Pattern.compile("^[A-Za-z0-9]+$")
+					.matcher(playerName).matches();
+			if (!validName)
+				errorLabel.setText("INVALID NAME");
 		}
 
 		String validData[] = { host, port, playerName };
