@@ -10,8 +10,9 @@ Based on the popular hand game Finger Chess, FingerChessed is a server-client ne
 To play, simply double-click the <code>FingerChessedClient.jar</code>
 
 To run the server, simply perform the following command:<br>
-<code>java -jar FingerChessedServer.jar HOST PORT</code>
+<code>java -jar FingerChessedServer.jar HOST PORT [GAME_TYPE]</code>
 
 <h3>Changelog</h3>
-<pre>v0.2-alpha - client is now executable and user-friendly
+<pre>v0.3-alpha - server verbose output, new game types, misc UI improvements
+v0.2-alpha - client is now executable and user-friendly
 v0.1-alpha - initial alpha release</pre>
