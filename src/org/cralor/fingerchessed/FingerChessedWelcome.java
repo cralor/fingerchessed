@@ -195,6 +195,7 @@ public class FingerChessedWelcome extends JFrame {
 		// Display all the things.
 		pack();
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		getRootPane().setDefaultButton(connectButton);
 		setLocationRelativeTo(null);
 		setSize(500, 450);
 		setVisible(true);

@@ -2,6 +2,8 @@ package org.cralor.fingerchessed;
 
 import java.io.IOException;
 
+import org.cralor.fingerchessed.Game.GameType;
+
 public interface ModelListener {
 
 	public void handSet(int playerNum, int leftHand, int rightHand)
@@ -17,6 +19,8 @@ public interface ModelListener {
 
 	public void newGame(String playerOne, String playerTwo, int currentPlayer)
 			throws IOException;
+
+	public void receiveGameType(GameType gameType) throws IOException;
 
 	public void quit() throws IOException;
 

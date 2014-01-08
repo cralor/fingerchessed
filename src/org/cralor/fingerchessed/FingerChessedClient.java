@@ -29,12 +29,12 @@ public class FingerChessedClient {
 		}
 
 		FingerChessedUI view = new FingerChessedUI();
-		ModelProxy proxy = new ModelProxy(s);
-		view.setViewListener(proxy);
-		proxy.setModelListener(view);
+		ModelProxy model = new ModelProxy(s);
+		view.setViewListener(model);
+		model.setModelListener(view);
 
 		ViewProxy vp = new ViewProxy(s);
-		proxy.join(vp, playerName);
+		model.join(vp, playerName);
 
 	}
 

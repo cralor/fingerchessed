@@ -3,19 +3,23 @@ package org.cralor.fingerchessed;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import org.cralor.fingerchessed.Game.GameType;
+
 public class SessionManager implements ViewListener {
 
 	// Important class variables.
 	private ArrayList<Model> sessions = new ArrayList<Model>();
+	private GameType gameType;
 
-	public SessionManager() {
+	public SessionManager(GameType gameType) {
+		this.gameType = gameType;
 	}
 
 	@Override
 	public void join(ViewProxy p, String playerName) throws IOException {
 		// No sessions available.
 		if (sessions.size() == 0) {
-			Model m = new Model();
+			Model m = new Model(gameType);
 			m.getGame().setOneName(playerName);
 			sessions.add(m);
 			m.addModelListener(p);
@@ -25,7 +29,7 @@ public class SessionManager implements ViewListener {
 
 			// Session found is full, make new one.
 			if (!m.getGame().getPlayerTwo().equals("")) {
-				m = new Model();
+				m = new Model(gameType);
 				m.getGame().setOneName(playerName);
 				sessions.add(m);
 				m.addModelListener(p);
@@ -36,6 +40,7 @@ public class SessionManager implements ViewListener {
 				m.addModelListener(p);
 				m.bothJoined(m.getGame().getPlayerOne(), m.getGame()
 						.getPlayerTwo(), 1);
+				m.setGameType(gameType);
 				p.setViewListener(m);
 			}
 		}
@@ -44,23 +49,28 @@ public class SessionManager implements ViewListener {
 	@Override
 	public void setHand(int playerNum, int leftHand, int rightHand)
 			throws IOException {
-		// We do nothing here.
+		// The Model handles this.
 	}
 
 	@Override
 	public void quit() throws IOException {
-		// We do nothing here.
+		// The Model handles this.
 	}
 
 	@Override
 	public void split() throws IOException {
-		// We do nothing here.
+		// The Model handles this.
 	}
 
 	@Override
 	public void newGame(String playerOne, String playerTwo, int currentPlayer)
 			throws IOException {
-		// We do nothing here.
+		// The Model handles this.
+	}
+
+	@Override
+	public void setGameType(GameType gameType) throws IOException {
+		// The Model handles this.
 	}
 
 }

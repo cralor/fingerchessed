@@ -4,13 +4,19 @@ import java.io.IOException;
 import java.util.Iterator;
 import java.util.LinkedList;
 
+import org.cralor.fingerchessed.Game.GameType;
+
 public class Model implements ViewListener {
 
 	// Important class variables.
-	private Game engine = new Game();
+	private Game engine;
 	private LinkedList<ModelListener> listeners = new LinkedList<ModelListener>();
 
-	public Model() {
+	public Model(GameType gameType) {
+		try {
+			setGameType(gameType);
+		} catch (IOException e) {
+		}
 	}
 
 	public synchronized void addModelListener(ModelListener modelListener) {
@@ -24,7 +30,7 @@ public class Model implements ViewListener {
 	@Override
 	public synchronized void join(ViewProxy proxy, String playerName)
 			throws IOException {
-		// We do nothing here.
+		// SessionManager handles this.
 	}
 
 	@Override
@@ -118,6 +124,21 @@ public class Model implements ViewListener {
 			ModelListener listener = iter.next();
 			try {
 				listener.newGame(playerOne, playerTwo, currentPlayer++);
+			} catch (IOException e) {
+				iter.remove();
+			}
+		}
+	}
+
+	@Override
+	public void setGameType(GameType gameType) throws IOException {
+		this.engine = new Game(gameType);
+
+		Iterator<ModelListener> iter = listeners.iterator();
+		while (iter.hasNext()) {
+			ModelListener listener = iter.next();
+			try {
+				listener.receiveGameType(gameType);
 			} catch (IOException e) {
 				iter.remove();
 			}

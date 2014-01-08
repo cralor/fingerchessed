@@ -5,6 +5,8 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
 
+import org.cralor.fingerchessed.Game.GameType;
+
 public class ModelProxy implements ViewListener {
 
 	// Important class variables.
@@ -63,6 +65,11 @@ public class ModelProxy implements ViewListener {
 		out.flush();
 	}
 
+	@Override
+	public void setGameType(GameType gameType) throws IOException {
+		// To be implemented if client options added.
+	}
+
 	private class readingProcess extends Thread {
 
 		@Override
@@ -101,6 +108,10 @@ public class ModelProxy implements ViewListener {
 						int currentPlayer = in.readInt();
 						modelListener.newGame(playerOneName, playerTwoName,
 								currentPlayer);
+						break;
+					case 'G':
+						GameType gameType = GameType.valueOf(in.readUTF());
+						modelListener.receiveGameType(gameType);
 						break;
 					case 'Q':
 						s.close();

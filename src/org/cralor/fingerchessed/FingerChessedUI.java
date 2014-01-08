@@ -15,6 +15,8 @@ import javax.swing.JLabel;
 import javax.swing.JTextField;
 import javax.swing.UIManager;
 
+import org.cralor.fingerchessed.Game.GameType;
+
 @SuppressWarnings("serial")
 public class FingerChessedUI extends JFrame implements ModelListener {
 
@@ -24,6 +26,7 @@ public class FingerChessedUI extends JFrame implements ModelListener {
 	private String nameOne;
 	private String nameTwo;
 	private boolean oneFinishedPlaying = true;
+	private GameType gameType;
 
 	private int playerOneLeftValue = 1;
 	private int playerOneRightValue = 1;
@@ -362,7 +365,7 @@ public class FingerChessedUI extends JFrame implements ModelListener {
 		getContentPane().setLayout(lm);
 
 		// Set up the player titles.
-		playerOneTitle = new JLabel("PLAYER 1");
+		playerOneTitle = new JLabel("You");
 		c.gridx = 1;
 		c.gridy = 1;
 		c.gridwidth = 2;
@@ -370,7 +373,7 @@ public class FingerChessedUI extends JFrame implements ModelListener {
 
 		getContentPane().add(playerOneTitle);
 
-		playerTwoTitle = new JLabel("PLAYER 2");
+		playerTwoTitle = new JLabel("Waiting...");
 		c.gridx = 1;
 		c.gridy = 4;
 		c.gridwidth = 2;
@@ -406,14 +409,19 @@ public class FingerChessedUI extends JFrame implements ModelListener {
 			public void actionPerformed(ActionEvent e) {
 				if (playerNumber == 1) {
 					myChoice = playerOneLeftValue;
-					// int currPlayer = (playerNumber == 1 ? 2 : 1);
 					enablePlayerOne(false);
 					enablePlayerTwo(true);
 				} else {
 					int newValue = myChoice + playerOneLeftValue;
-					newValue = (newValue >= 5 ? 0 : newValue);
+					if (gameType == GameType.EXACTLY_FIVE) {
+						newValue = (newValue > 5 ? newValue - 5 : newValue);
+						newValue = (newValue == 5 ? 0 : newValue);
+					} else {
+						newValue = (newValue >= 5 ? 0 : newValue);
+					}
 					int oppNum = (playerNumber == 1 ? 2 : 1);
 					try {
+						messageArea.setText("THIS IS REALLY WORKING!");
 						viewListener.setHand(oppNum, newValue,
 								playerOneRightValue);
 					} catch (IOException e1) {
@@ -433,9 +441,15 @@ public class FingerChessedUI extends JFrame implements ModelListener {
 					enablePlayerTwo(true);
 				} else {
 					int newValue = myChoice + playerOneRightValue;
-					newValue = (newValue >= 5 ? 0 : newValue);
+					if (gameType == GameType.EXACTLY_FIVE) {
+						newValue = (newValue > 5 ? newValue - 5 : newValue);
+						newValue = (newValue == 5 ? 0 : newValue);
+					} else {
+						newValue = (newValue >= 5 ? 0 : newValue);
+					}
 					int oppNum = (playerNumber == 1 ? 2 : 1);
 					try {
+						messageArea.setText("THIS IS REALLY WORKING!");
 						viewListener.setHand(oppNum, playerOneLeftValue,
 								newValue);
 					} catch (IOException e1) {
@@ -455,7 +469,12 @@ public class FingerChessedUI extends JFrame implements ModelListener {
 					enablePlayerTwo(false);
 				} else {
 					int newValue = myChoice + playerTwoLeftValue;
-					newValue = (newValue >= 5 ? 0 : newValue);
+					if (gameType == GameType.EXACTLY_FIVE) {
+						newValue = (newValue > 5 ? newValue - 5 : newValue);
+						newValue = (newValue == 5 ? 0 : newValue);
+					} else {
+						newValue = (newValue >= 5 ? 0 : newValue);
+					}
 					int oppNum = (playerNumber == 1 ? 2 : 1);
 					try {
 						viewListener.setHand(oppNum, newValue,
@@ -477,9 +496,15 @@ public class FingerChessedUI extends JFrame implements ModelListener {
 					enablePlayerTwo(false);
 				} else {
 					int newValue = myChoice + playerTwoRightValue;
-					newValue = (newValue >= 5 ? 0 : newValue);
+					if (gameType == GameType.EXACTLY_FIVE) {
+						newValue = (newValue > 5 ? newValue - 5 : newValue);
+						newValue = (newValue == 5 ? 0 : newValue);
+					} else {
+						newValue = (newValue >= 5 ? 0 : newValue);
+					}
 					int oppNum = (playerNumber == 1 ? 2 : 1);
 					try {
+						messageArea.setText("THIS IS REALLY WORKING!");
 						viewListener.setHand(oppNum, playerTwoLeftValue,
 								newValue);
 					} catch (IOException e1) {
@@ -769,5 +794,10 @@ public class FingerChessedUI extends JFrame implements ModelListener {
 		newGameButton.setEnabled(false);
 
 		bothJoined(playerOne, playerTwo, currentPlayer);
+	}
+
+	@Override
+	public void receiveGameType(GameType gameType) throws IOException {
+		this.gameType = gameType;
 	}
 }

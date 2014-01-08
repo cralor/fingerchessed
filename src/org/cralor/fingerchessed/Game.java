@@ -10,11 +10,17 @@ public class Game {
 	private int oneRightHand = 1;
 	private int twoLeftHand = 1;
 	private int twoRightHand = 1;
+	private GameType gameType;
 
 	// private int oneWins;
 	// private int twoWins;
 
-	public Game() {
+	public Game(GameType gameType) {
+		this.gameType = gameType;
+	}
+
+	public enum GameType {
+		STOP_AT_FIVE, EXACTLY_FIVE
 	}
 
 	public synchronized void switchTurns(int currentTurn) {

@@ -5,6 +5,8 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
 
+import org.cralor.fingerchessed.Game.GameType;
+
 public class ViewProxy implements ModelListener {
 
 	// Important class variables.
@@ -78,6 +80,13 @@ public class ViewProxy implements ModelListener {
 		out.writeUTF(playerOne);
 		out.writeUTF(playerTwo);
 		out.writeInt(currentPlayer);
+		out.flush();
+	}
+
+	@Override
+	public void receiveGameType(GameType gameType) throws IOException {
+		out.writeByte('G');
+		out.writeUTF(String.valueOf(gameType));
 		out.flush();
 	}
 
