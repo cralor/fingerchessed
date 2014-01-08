@@ -9,10 +9,12 @@ import org.cralor.fingerchessed.Game.GameType;
 public class Model implements ViewListener {
 
 	// Important class variables.
-	private Game engine;
+	private GameType theGameType;
+	private Game engine = new Game(theGameType);
 	private LinkedList<ModelListener> listeners = new LinkedList<ModelListener>();
 
 	public Model(GameType gameType) {
+		this.theGameType = gameType;
 		try {
 			setGameType(gameType);
 		} catch (IOException e) {
@@ -23,8 +25,20 @@ public class Model implements ViewListener {
 		listeners.add(modelListener);
 	}
 
-	public Game getGame() {
-		return this.engine;
+	public void setPlayerOne(String name) {
+		this.engine.setOneName(name);
+	}
+
+	public void setPlayerTwo(String name) {
+		this.engine.setTwoName(name);
+	}
+
+	public String getPlayerOne() {
+		return this.engine.getPlayerOne();
+	}
+
+	public String getPlayerTwo() {
+		return this.engine.getPlayerTwo();
 	}
 
 	@Override
@@ -59,6 +73,9 @@ public class Model implements ViewListener {
 
 	@Override
 	public synchronized void quit() throws IOException {
+		System.out.printf("\nINFO: Session with %s and %s has ended.\n",
+				getPlayerOne(), getPlayerTwo());
+
 		Iterator<ModelListener> iter = listeners.iterator();
 		while (iter.hasNext()) {
 			ModelListener listener = iter.next();
@@ -132,8 +149,6 @@ public class Model implements ViewListener {
 
 	@Override
 	public void setGameType(GameType gameType) throws IOException {
-		this.engine = new Game(gameType);
-
 		Iterator<ModelListener> iter = listeners.iterator();
 		while (iter.hasNext()) {
 			ModelListener listener = iter.next();

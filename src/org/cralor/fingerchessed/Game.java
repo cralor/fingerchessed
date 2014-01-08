@@ -32,11 +32,11 @@ public class Game {
 	}
 
 	public synchronized String getPlayerOne() {
-		return playerOne;
+		return this.playerOne;
 	}
 
 	public synchronized String getPlayerTwo() {
-		return playerTwo;
+		return this.playerTwo;
 	}
 
 	public synchronized void setOneName(String playerName) {
