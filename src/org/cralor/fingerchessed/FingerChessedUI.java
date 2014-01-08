@@ -421,7 +421,6 @@ public class FingerChessedUI extends JFrame implements ModelListener {
 					}
 					int oppNum = (playerNumber == 1 ? 2 : 1);
 					try {
-						messageArea.setText("THIS IS REALLY WORKING!");
 						viewListener.setHand(oppNum, newValue,
 								playerOneRightValue);
 					} catch (IOException e1) {
@@ -449,7 +448,6 @@ public class FingerChessedUI extends JFrame implements ModelListener {
 					}
 					int oppNum = (playerNumber == 1 ? 2 : 1);
 					try {
-						messageArea.setText("THIS IS REALLY WORKING!");
 						viewListener.setHand(oppNum, playerOneLeftValue,
 								newValue);
 					} catch (IOException e1) {
@@ -504,7 +502,6 @@ public class FingerChessedUI extends JFrame implements ModelListener {
 					}
 					int oppNum = (playerNumber == 1 ? 2 : 1);
 					try {
-						messageArea.setText("THIS IS REALLY WORKING!");
 						viewListener.setHand(oppNum, playerTwoLeftValue,
 								newValue);
 					} catch (IOException e1) {
