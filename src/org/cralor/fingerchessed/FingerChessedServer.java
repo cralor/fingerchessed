@@ -1,7 +1,6 @@
 package org.cralor.fingerchessed;
 
 import java.io.IOException;
-import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 
@@ -33,8 +32,7 @@ public class FingerChessedServer {
 		}
 
 		// Establish game components.
-		ServerSocket s = new ServerSocket();
-		s.bind(new InetSocketAddress(host, port));
+		ServerSocket s = new ServerSocket(port);
 
 		SessionManager m = new SessionManager(gameType);
 
